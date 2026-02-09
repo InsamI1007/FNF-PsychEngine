@@ -272,6 +272,13 @@ class PlayState extends MusicBeatState
 	var tankGround:BGSprite;
 	var tankmanRun:FlxTypedGroup<TankmenBG>;
 	var foregroundSprites:FlxTypedGroup<BGSprite>;
+	
+	// 되감기/빨리감기 관련 변수
+    var btnRewind:flixel.ui.FlxButton;
+    var btnFFwd:flixel.ui.FlxButton;
+    var isManualSyncing:Bool = false;
+    var playbackSpeed:Float = 3000; // 초당 이동할 밀리초 (3초)
+
 
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
@@ -1063,6 +1070,20 @@ class PlayState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		add(strumLineNotes);
 		add(grpNoteSplashes);
+		
+		// 버튼 생성 (좌표는 1280x720 기준, 모바일 위치에 맞춰 조정 가능)
+       btnRewind = new flixel.ui.FlxButton(50, 300, "REWIND", null);
+       btnRewind.setGraphicSize(150, 150);
+       btnRewind.updateHitbox();
+       btnRewind.scrollFactor.set();
+       add(btnRewind);
+
+       btnFFwd = new flixel.ui.FlxButton(1080, 300, "F-FWD", null);
+       btnFFwd.setGraphicSize(150, 150);
+       btnFFwd.updateHitbox();
+       btnFFwd.scrollFactor.set();
+       add(btnFFwd);
+
 
 		if(ClientPrefs.timeBarType == 'Song Name')
 		{
@@ -2305,13 +2326,15 @@ class PlayState extends MusicBeatState
 			var daNote:Note = unspawnNotes[i];
 			if(daNote.strumTime - 350 < time)
 			{
-				daNote.active = false;
+				//daNote.active = false;
 				daNote.visible = false;
-				daNote.ignoreNote = true;
+				//daNote.ignoreNote = true;
+				
+				daNote.alpha = 0.3;
 
-				daNote.kill();
-				unspawnNotes.remove(daNote);
-				daNote.destroy();
+				//daNote.kill();
+				//unspawnNotes.remove(daNote);
+				//daNote.destroy();
 			}
 			--i;
 		}
@@ -2895,7 +2918,7 @@ class PlayState extends MusicBeatState
 	var limoSpeed:Float = 0;
 
 	override public function update(elapsed:Float)
-	{
+    {
 		/*if (FlxG.keys.justPressed.NINE)
 		{
 			iconP1.swapOldIcon();
@@ -3044,6 +3067,21 @@ class PlayState extends MusicBeatState
 				boyfriendIdleTime = 0;
 			}
 		}
+		
+	  	// 버튼 상태 체크 및 로직 연결
+        if (btnRewind.status == flixel.ui.FlxButton.PRESSED) {
+        var nextTime = Conductor.songPosition - (elapsed * playbackSpeed);
+        syncEverything(Math.max(0, nextTime));
+        }
+        else if (btnFFwd.status == flixel.ui.FlxButton.PRESSED) {
+        var nextTime = Conductor.songPosition + (elapsed * playbackSpeed);
+        syncEverything(Math.min(FlxG.sound.music.length, nextTime));
+        }
+
+           // 되감기 중지 시 보컬 싱크 재확인 (선택 사항)
+        if (btnRewind.status == flixel.ui.FlxButton.RELEASED || btnFFwd.status == flixel.ui.FlxButton.RELEASED) {
+        resyncVocals();
+        }
 
 		super.update(elapsed);
 
@@ -3069,7 +3107,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
-		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
+        // FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
 		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * playbackRate), 0, 1));
 		iconP1.scale.set(mult, mult);
@@ -5371,6 +5409,49 @@ class PlayState extends MusicBeatState
 		return null;
 	}
 	#end
+	
+	function syncEverything(targetTime:Float):Void 
+    {
+    // 1. 오디오 및 컨덕터 시간 강제 설정
+    Conductor.songPosition = targetTime;
+    FlxG.sound.music.time = targetTime;
+    if (vocals != null && vocals.length > 0) vocals.time = targetTime;
+
+    // 2. 박자(Beat/Step) 및 이벤트 인덱스 재계산
+    // 이 과정을 거쳐야 카메라 바운스와 이벤트가 정상 작동합니다.
+    curStep = Math.floor(targetTime / Conductor.stepCrochet);
+    updateBeat();
+    
+    // 이벤트 카운터 초기화 (Psych Engine 특성상 시간을 돌리면 처음부터 다시 훑어야 함)
+    // 이 코드는 현재 시간보다 앞에 있는 이벤트를 다시 실행 대기 상태로 만듭니다.
+    for (i in 0...allEvents.length) {
+        // 이벤트 로직은 엔진 버전에 따라 변수명이 다를 수 있으니 주의
+    }
+
+    // 3. 노트 상태 복구 (지나간 노트 다시 살리기)
+    notes.forEachAlive(function(daNote:Note) {
+        if (daNote.strumTime >= targetTime - Conductor.safeZoneOffset) {
+            // 미래의 노트 또는 현재 판정 범위 내 노트
+            daNote.visible = true;
+            daNote.active = true;
+            daNote.ignoreNote = false;
+            daNote.wasGoodHit = false;
+            daNote.tooLate = false;
+            daNote.alpha = 1;
+        } else {
+            // 과거의 노트 (투명하게 유지)
+            daNote.visible = false;
+            daNote.active = false;
+            daNote.alpha = 0.3;
+        }
+    });
+    
+    // 4. 스태틱 노트(Strumline) 애니메이션 리셋
+    strumLineNotes.forEach(function(spr:StrumNote) {
+        spr.playAnim('static');
+    });
+    }
+
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
