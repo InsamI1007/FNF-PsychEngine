@@ -60,8 +60,8 @@ jobs:
           haxelib install hxjsonast
           haxelib install hscript
           haxelib install hxCodec 2.5.1
-          haxelib install linc_luajit
-          haxelib install extension-androidtools
+          haxelib install linc_luajit 0.0.7
+          haxelib install extension-androidtools 2.0.2
           haxelib install hxcpp-debug-server
           haxelib list
       - name: Create Version Tag
