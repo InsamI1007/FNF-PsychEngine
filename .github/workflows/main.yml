@@ -59,7 +59,7 @@ jobs:
           haxelib install tjson
           haxelib install hxjsonast
           haxelib install hscript
-          haxelib git hxCodec 2.5.1
+          haxelib install hxCodec 2.5.1
           haxelib git linc_luajit https://github.com
           haxelib git extension-androidtools https://github.com
           haxelib install hxcpp-debug-server
