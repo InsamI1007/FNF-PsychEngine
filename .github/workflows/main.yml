@@ -60,7 +60,7 @@ jobs:
           haxelib install hxjsonast > /dev/null
           haxelib install hscript > /dev/null
           haxelib install hxCodec 2.5.1 > /dev/null
-          haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit.git
+          haxelib git linc_luajit https://github.com/superpowers04/linc_luajit.git
           haxelib git extension-androidtools https://github.com/LimeExtensions/extension-androidtools.git
           haxelib install hxcpp-debug-server > /dev/null
           haxelib list
