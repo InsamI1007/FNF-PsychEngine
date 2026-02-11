@@ -51,11 +51,11 @@ jobs:
           haxelib install hxcpp 4.2.1 > /dev/null
           haxelib install lime 7.9.0 > /dev/null
           haxelib install openfl 9.1.0 > /dev/null
-          haxelib install flixel 5.5.0 > /dev/null
+          haxelib install flixel 5.5.0 --always > /dev/null 
           haxelib run lime setup flixel > /dev/null
           haxelib install flixel-tools > /dev/null
-          haxelib install flixel-ui 2.5.0 > /dev/null
-          haxelib install flixel-addons 3.2.1 > /dev/null
+          haxelib install flixel-ui 2.5.0 --always > /dev/null
+          haxelib install flixel-addons 3.2.1 --always > /dev/null
           haxelib install tjson > /dev/null
           haxelib install hxjsonast > /dev/null
           haxelib install hscript > /dev/null
