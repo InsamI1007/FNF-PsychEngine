@@ -48,11 +48,9 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
-          haxelib remove flixel --all || true
-          haxelib remove flixel-tools --all || true
-          haxelib remove flixel-ui --all || true
-          haxelib remove flixel-addons --all || true
-          haxelib remove extension-androidtools --all || true
+          rm -rf ~/haxelib/*
+          haxelib setup ~/haxelib
+          mkdir -p ~/haxelib
           haxelib install hxcpp 4.2.1 > /dev/null
           haxelib install lime 7.9.0 > /dev/null
           haxelib install openfl 9.1.0 > /dev/null
