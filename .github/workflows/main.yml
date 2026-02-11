@@ -47,22 +47,22 @@ jobs:
 
       - name: Install Haxelib
         run: |
-          haxelib setup ~/haxelib -quiet
-          haxelib install hxcpp 4.2.1 > /dev/null -quiet
-          haxelib install lime 7.9.0 -quiet
-          haxelib install openfl 9.1.0 -quiet
-          haxelib --never install flixel 4.11.0 -quiet
-          haxelib run lime setup flixel -quiet
-          haxelib install flixel-tools -quiet
-          haxelib install flixel-ui -quiet
-          haxelib install flixel-addons 2.11.0 -quiet
-          haxelib install tjson -quiet
-          haxelib install hxjsonast -quiet
-          haxelib install hscript -quiet
-          haxelib install hxCodec 2.5.1 -quiet
-          haxelib install linc_luajit 0.0.7 -quiet
-          haxelib install extension-androidtools 2.0.2 -quiet
-          haxelib install hxcpp-debug-server -quiet
+          haxelib setup ~/haxelib
+          haxelib install hxcpp 4.2.1 > /dev/null
+          haxelib install lime 7.9.0 > /dev/null
+          haxelib install openfl 9.1.0 > /dev/null
+          haxelib --never install flixel 4.11.0 > /dev/null
+          haxelib run lime setup flixel > /dev/null
+          haxelib install flixel-tools > /dev/null
+          haxelib install flixel-ui > /dev/null
+          haxelib install flixel-addons 2.11.0 > /dev/null
+          haxelib install tjson > /dev/null
+          haxelib install hxjsonast > /dev/null
+          haxelib install hscript > /dev/null
+          haxelib install hxCodec 2.5.1 > /dev/null
+          haxelib install linc_luajit 0.0.7 > /dev/null
+          haxelib install extension-androidtools 2.0.2 > /dev/null
+          haxelib install hxcpp-debug-server > /dev/null
           haxelib list
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
