@@ -93,6 +93,7 @@ jobs:
           haxelib set flixel-addons 3.2.1 --always
           haxelib set flixel-ui 2.5.0 --always
           haxelib list
+          export HAXELIB_PATH=~/haxelib
           haxelib run lime build android -D NO_PRECOMPILED_HEADERS --app-version="4.0.0-${{ github.run_id}}"
           
 
