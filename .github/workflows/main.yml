@@ -89,8 +89,6 @@ jobs:
       - name: Compile
         run: |
           haxelib setup ~/haxelib
-          rm -rf ~/haxelib/*
-          mkdir -p ~/haxelib
           haxelib set flixel 5.5.0 --always
           haxelib set flixel-addons 3.2.1 --always
           haxelib set flixel-ui 2.5.0 --always
