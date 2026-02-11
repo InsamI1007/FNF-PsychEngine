@@ -87,7 +87,13 @@ jobs:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
       - name: Compile
-        run: haxelib run lime build android -D NO_PRECOMPILED_HEADERS --app-version="4.0.0-${{ github.run_id}}"
+        run: |
+          haxelib setup ~/haxelib
+          haxelib set flixel 5.5.0
+          haxelib set flixel-addons 3.2.1
+          haxelib set flixel-ui 2.5.0
+          haxelib run lime build android -D NO_PRECOMPILED_HEADERS --app-version="4.0.0-${{ github.run_id}}"
+          
 
       - name: Publish Artifact
         uses: actions/upload-artifact@main
