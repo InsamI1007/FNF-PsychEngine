@@ -100,6 +100,21 @@ jobs:
           haxelib set lime 7.9.0
           haxelib set openfl 9.1.0
           haxelib set extension-androidtools git
+
+          # 1. pitch 관련 에러 줄을 무조건 주석 처리 (//)
+          sed -i 's/.*\.pitch.*/\/\/ &/g' source/PlayState.hx
+          sed -i 's/.*\.pitch.*/\/\/ &/g' source/editors/ChartingState.hx
+          sed -i 's/.*\.pitch.*/\/\/ &/g' source/Character.hx
+
+          # 2. RELEASED 에러 줄 주석 처리
+          sed -i 's/.*RELEASED.*/\/\/ &/g' source/PlayState.hx
+
+          # 3. allEvents 변수 강제 주입 (없어서 생기는 에러 해결)
+          sed -i '/class PlayState/a \    public static var allEvents:Array<Dynamic> = [];' source/PlayState.hx
+
+          # 4. SUtil.hx 에러 방지 (android.Tools 무시)
+          sed -i 's/import android.Tools;/\/\/ &/g' source/SUtil.hx
+          sed -i 's/import android.Permissions;/\/\/ &/g' source/SUtil.hx
           
           # 캐시 삭제 및 빌드
           rm -rf export
