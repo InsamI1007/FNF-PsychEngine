@@ -47,13 +47,9 @@ jobs:
 
       - name: Install Haxelib
         run: |
+          haxelib setup /home/runner/haxelib
           export HAXELIB_PATH=/home/runner/haxelib
-          haxelib setup /home/runner/haxelib
-          rm -rf /home/runner/haxelib/*
-          haxelib setup /home/runner/haxelib
-          mkdir -p ~/haxelib
-          
-          haxelib setup ~/haxelib
+
           haxelib install hxcpp 4.2.1 > /dev/null
           haxelib install lime 7.9.0 > /dev/null
           haxelib install openfl 9.1.0 > /dev/null
@@ -93,19 +89,21 @@ jobs:
 
       - name: Compile
         run: |
-          haxelib setup ~/haxelib
-          haxelib set flixel 5.5.0 --always
-          haxelib set flixel-addons 3.2.1 --always
-          haxelib set flixel-ui 2.5.0 --always
+          # 경로 하나로 통일
+          haxelib setup /home/runner/haxelib
+          export HAXELIB_PATH=/home/runner/haxelib
+          
+          # 버전 고정
+          haxelib set flixel 5.5.0
+          haxelib set flixel-addons 3.2.1
+          haxelib set flixel-ui 2.5.0
           haxelib set lime 7.9.0
           haxelib set openfl 9.1.0
           haxelib set extension-androidtools git
-          haxelib list
-          export HAXELIB_PATH=/home/runner/haxelib
-          haxelib setup /home/runner/haxelib
+          
+          # 캐시 삭제 및 빌드
           rm -rf export
           haxelib run lime build android -clean -D NO_PRECOMPILED_HEADERS --app-version="4.0.0-${{ github.run_id }}"
-
                     
       - name: Publish Artifact
         uses: actions/upload-artifact@main
