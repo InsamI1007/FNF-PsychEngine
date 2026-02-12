@@ -94,14 +94,7 @@ jobs:
           haxelib set flixel-ui 2.5.0 --always
           haxelib list
           export HAXELIB_PATH=~/haxelib
-          haxelib run lime build android -D NO_PRECOMPILED_HEADERS \
-          -lib flixel:5.5.0 \
-          -lib flixel-addons:3.2.1 \
-          -lib flixel-ui:2.5.0 \
-          -lib lime:7.9.0 \
-          -lib openfl:9.1.0 \
-          --app-version="4.0.0-${{ github.run_id}}"
-          
+          haxelib run lime build android -D NO_PRECOMPILED_HEADERS -lib flixel:5.5.0 -lib flixel-addons:3.2.1 -lib flixel-ui:2.5.0 -lib lime:7.9.0 -lib openfl:9.1.0 -lib extension-androidtools:git --app-version="4.0.0-${{ github.run_id}}"          
 
       - name: Publish Artifact
         uses: actions/upload-artifact@main
