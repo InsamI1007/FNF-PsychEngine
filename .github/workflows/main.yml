@@ -96,9 +96,11 @@ jobs:
           haxelib set openfl 9.1.0
           haxelib set extension-androidtools git
           haxelib list
+          rm -rf export
           export HAXELIB_PATH=~/haxelib
-          haxelib run lime build android -D NO_PRECOMPILED_HEADERS --app-version="4.0.0-${{ github.run_id}}"
-          
+          haxelib run lime build android -clean -D NO_PRECOMPILED_HEADERS --app-version="4.0.0-${{ github.run_id }}"
+
+                    
       - name: Publish Artifact
         uses: actions/upload-artifact@main
         with:
