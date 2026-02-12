@@ -143,6 +143,18 @@
 	<!-- Enables a terminal log prompt on debug builds -->
 	<haxelib name="hxcpp-debug-server" if="debug"/>
 
+	<haxelib name="flixel" version="5.5.0" />
+    <haxelib name="flixel-addons" version="3.2.1" />
+    <haxelib name="flixel-ui" version="2.5.0" />
+
+    <section if="android">
+    <haxelib name="extension-androidtools" />
+    <define name="android" />
+    <define name="mobile" />
+    </section>
+
+	<haxelib name="linc_luajit" if="LUA_ALLOWED" />
+
 	<!-- <haxelib name="markdown" /> -->
 	<!-- <haxelib name="HtmlParser" /> -->
 
