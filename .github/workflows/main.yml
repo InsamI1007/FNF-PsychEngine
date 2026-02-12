@@ -47,9 +47,13 @@ jobs:
 
       - name: Install Haxelib
         run: |
-          haxelib setup ~/haxelib
-          rm -rf ~/haxelib/*
+          export HAXELIB_PATH=/home/runner/haxelib
+          haxelib setup /home/runner/haxelib
+          rm -rf /home/runner/haxelib/*
+          haxelib setup /home/runner/haxelib
           mkdir -p ~/haxelib
+          
+          haxelib setup ~/haxelib
           haxelib install hxcpp 4.2.1 > /dev/null
           haxelib install lime 7.9.0 > /dev/null
           haxelib install openfl 9.1.0 > /dev/null
@@ -65,6 +69,7 @@ jobs:
           haxelib git linc_luajit https://github.com/superpowers04/linc_luajit.git
           haxelib git extension-androidtools https://github.com/MAJigsaw77/extension-androidtools.git
           haxelib install hxcpp-debug-server > /dev/null
+          
           haxelib list
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
@@ -96,8 +101,9 @@ jobs:
           haxelib set openfl 9.1.0
           haxelib set extension-androidtools git
           haxelib list
+          export HAXELIB_PATH=/home/runner/haxelib
+          haxelib setup /home/runner/haxelib
           rm -rf export
-          export HAXELIB_PATH=~/haxelib
           haxelib run lime build android -clean -D NO_PRECOMPILED_HEADERS --app-version="4.0.0-${{ github.run_id }}"
 
                     
