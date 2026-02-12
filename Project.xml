@@ -44,6 +44,9 @@
 	<classpath name="source" />
 	
 	<!-- PSYCH ENGINE CUSTOMIZATION -->
+	<!-- 안드로이드 빌드임을 시스템에 확실히 알림 -->
+    <define name="android" if="android" />
+    <define name="mobile" if="android" />
 	<define name="MODS_ALLOWED" if="desktop || android" />
 	<define name="LUA_ALLOWED" if="desktop || android"/>
 	<define name="ACHIEVEMENTS_ALLOWED" />
